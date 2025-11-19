@@ -1,6 +1,8 @@
 import {getData} from '../utils/getData.js'
 import {sendResponse} from '../utils/sendResponse.js'
 import {parseJSONBody} from '../utils/parseJSONBody.js'
+import {addNewFighting} from '../utils/addNewFighting.js'
+
 
 async function handleGet(res){
     const data = await getData()
@@ -10,9 +12,15 @@ async function handleGet(res){
 }
 
 async function handlePost(req, res){
-    const rawBody = await parseJSONBody(req)
-    console.log(rawBody)
+    try{
+    const parsedBody = await parseJSONBody(req)
+    console.log(parsedBody)
+    await addNewFighting (parsedBody)
+    sendResponse(res, 201, 'application/json', JSON.stringify(parsedBody))}
+    catch(e){
+        sendResponse(res, 400, 'application/json', JSON.stringify(parsedBody))
 
+    }
 }
 
 export {handleGet, handlePost}
